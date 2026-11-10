@@ -1,0 +1,113 @@
+
+[
+  {
+    "id": "science_001",
+    "topic": "Photosynthesis",
+    "grade": 8,
+    "subject": "Science",
+    "keywords": [
+      "photosynthesis",
+      "plants",
+      "food",
+      "sunlight",
+      "కిరణజన్య",
+      "కిరణజన్య సంయోగక్రియ",
+      "మొక్కలు",
+      "సూర్యకాంతి",
+      "ఆహారం"
+    ],
+    "explanation_en": "Photosynthesis is the process by which green plants prepare their own food using sunlight, water and carbon dioxide. Chlorophyll in leaves captures sunlight. Oxygen is released during this process.",
+    "explanation_te": "కిరణజన్య సంయోగక్రియ అనేది మొక్కలు సూర్యకాంతి సహాయంతో తమ ఆహారాన్ని తయారు చేసుకునే ప్రక్రియ. ఆకుల్లో ఉండే క్లోరోఫిల్ సూర్యకాంతిని గ్రహిస్తుంది. ఈ ప్రక్రియలో ఆక్సిజన్ విడుదల అవుతుంది.",
+    "example_en": "A potted plant kept on a sunny windowsill grows green and healthy, while one kept in a dark cupboard turns pale.",
+    "example_te": "ఒక మొక్కను సూర్యకాంతి ఉన్న ప్రదేశంలో ఉంచితే, అది నీరు మరియు గాలిలోని కార్బన్ డయాక్సైడ్ సహాయంతో ఆహారాన్ని తయారు చేసుకుంటుంది.",
+    "key_terms": [
+      "సూర్యకాంతి",
+      "క్లోరోఫిల్",
+      "నీరు",
+      "కార్బన్ డయాక్సైడ్",
+      "ఆక్సిజన్"
+    ]
+  },
+  {
+    "id": "science_002",
+    "topic": "Force and Motion",
+    "grade": 8,
+    "subject": "Science",
+    "keywords": [
+      "force",
+      "motion",
+      "push",
+      "pull",
+      "బలం",
+      "చలనం",
+      "తోయడం",
+      "లాగడం"
+    ],
+    "explanation_en": "A force is a push or pull acting on an object. It can change an object's speed, direction or shape. Motion describes a change in an object's position over time.",
+    "explanation_te": "బలం అనేది ఒక వస్తువుపై పనిచేసే తోపుడు లేదా లాగుడు. బలం వల్ల వస్తువు వేగం, దిశ లేదా ఆకారం మారవచ్చు. కాలంతో పాటు వస్తువు స్థానం మారడాన్ని చలనం అంటారు.",
+    "example_en": "Kicking a stationary football applies force, making it roll forward across the playground.",
+    "example_te": "ఒక ఫుట్‌బాల్‌ను కాలితో తన్నినప్పుడు దానిపై బలం పనిచేసి అది కదలడం ప్రారంభిస్తుంది.",
+    "key_terms": [
+      "బలం",
+      "తోపుడు",
+      "లాగుడు",
+      "చలనం",
+      "వేగం"
+    ]
+  },
+  {
+    "id": "science_003",
+    "topic": "Friction",
+    "grade": 8,
+    "subject": "Science",
+    "keywords": [
+      "friction",
+      "surface",
+      "movement",
+      "ఘర్షణ",
+      "ఉపరితలం",
+      "కదలిక"
+    ],
+    "explanation_en": "Friction is a force that opposes relative motion between two surfaces in contact. It helps us walk and allows vehicles to stop using brakes.",
+    "explanation_te": "ఘర్షణ అనేది ఒకదానితో ఒకటి తాకుతున్న రెండు ఉపరితలాల మధ్య జరిగే కదలికను వ్యతిరేకించే బలం. మనం నడవడానికి మరియు వాహనాలు బ్రేకుల ద్వారా ఆగడానికి ఘర్షణ సహాయపడుతుంది.",
+    "example_en": "The friction between our shoe soles and the floor keeps us from slipping while running.",
+    "example_te": "నేలపై మనం నడిచేటప్పుడు పాదాలకు మరియు నేలకు మధ్య ఏర్పడే ఘర్షణ వల్ల మనం జారిపోకుండా నడవగలుగుతాము.",
+    "key_terms": [
+      "ఘర్షణ",
+      "ఉపరితలం",
+      "కదలిక",
+      "బలం"
+    ]
+  },
+  {
+    "id": "science_004",
+    "topic": "Water Cycle (జల చక్రం)",
+    "grade": 8,
+    "subject": "Science",
+    "keywords": [
+      "water cycle",
+      "water",
+      "rain",
+      "evaporation",
+      "condensation",
+      "clouds",
+      "జల చక్రం",
+      "జలచక్రం",
+      "నీరు",
+      "వర్షం",
+      "ఆవిరి",
+      "బాష్పీభవనం",
+      "సాంద్రీకరణం"
+    ],
+    "explanation_en": "The water cycle is the continuous movement of water from the Earth's surface to the atmosphere and back. Water evaporates due to solar heat, forms clouds through condensation, and falls back as rain.",
+    "explanation_te": "భూమిపై ఉన్న నీరు సూర్యుని వేడి వల్ల ఆవిరై పైకి వెళ్లి, చల్లబడి మేఘాలుగా మారి, తిరిగి వర్షం రూపంలో నేలను చేరే నిరంతర ప్రక్రియను జల చక్రం అంటారు.",
+    "example_en": "Wet clothes drying in the sun as water evaporates into the air is a daily example of the water cycle.",
+    "example_te": "ఎండలో ఆరేసిన తడి బట్టలలోని నీరు ఆవిరై గాలిలోకి చేరడం మరియు ఆకాశంలో మేఘాలుగా మారి వర్షం కురవడం జల చక్రానికి ఉదాహరణ.",
+    "key_terms": [
+      "జల చక్రం (Water Cycle)",
+      "బాష్పీభవనం (Evaporation)",
+      "సాంద్రీకరణం (Condensation)",
+      "వర్షపాతం (Precipitation)"
+    ]
+  }
+]

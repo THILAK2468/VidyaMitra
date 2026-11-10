@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: vidyamitra
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GNANI_PRISMA_STT_URL
+        value: https://api.gnani.ai/voice/stt/prisma-v2.5
+      - key: GNANI_TIMBRE_TTS_URL
+        value: https://api.gnani.ai/voice/tts/timbre
+      - key: GNANI_API_KEY
+        sync: false
+      - key: GNANI_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+

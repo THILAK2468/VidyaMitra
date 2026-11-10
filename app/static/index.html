@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidyaMitra | విద్యామిత్ర - Class 8 Science Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- 1. AUTH LANDING SCREEN (Appears First Before Main Page) -->
+    <section id="auth-screen" class="auth-landing-screen">
+      <div class="auth-landing-card">
+        <div class="auth-hero-header">
+          <div class="auth-hero-icon">🌿</div>
+          <h1 class="auth-hero-title">విద్యామిత్ర <span class="auth-hero-en">VidyaMitra</span></h1>
+          <p class="auth-hero-subtitle">మీ భాషలో నేర్చుకోండి • AI Science Learning Companion</p>
+          <p class="auth-hero-desc">8వ తరగతి సైన్స్ పాఠాలను తెలుగులో సులభంగా అర్థం చేసుకోండి.</p>
+        </div>
+
+        <div class="auth-card-body">
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab-btn active" id="tab-login-btn">లాగిన్ (Login)</button>
+            <button type="button" class="auth-tab-btn" id="tab-register-btn">నమోదు (Register)</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="login-form" class="auth-form">
+            <div class="form-group">
+              <label for="login-email">ఈమెయిల్ (Email)</label>
+              <input type="email" id="login-email" class="form-control" placeholder="student@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="login-password">పాస్‌వర్డ్ (Password)</label>
+              <div class="password-wrapper">
+                <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="toggle-password-btn" data-target="login-password" title="Show / Hide Password">👁️</button>
+              </div>
+            </div>
+            <div id="login-error" class="auth-error-msg hidden"></div>
+            <button type="submit" class="auth-submit-btn">లాగిన్ అవ్వండి (Login) ➔</button>
+            <p class="auth-switch-text">
+              ఖాతా లేదా? <a href="#" id="switch-to-register">ఇక్కడ నమోదు చేసుకోండి (Register)</a>
+            </p>
+          </form>
+
+          <!-- Registration Form -->
+          <form id="register-form" class="auth-form hidden">
+            <div class="form-group">
+              <label for="reg-name">విద్యార్థి పేరు (Student Name)</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="మీ పూర్తి పేరు" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="reg-class">తరగతి (Class / Grade)</label>
+              <select id="reg-class" class="form-control" required>
+                <option value="6వ తరగతి (Class 6)">6వ తరగతి (Class 6)</option>
+                <option value="7వ తరగతి (Class 7)">7వ తరగతి (Class 7)</option>
+                <option value="8వ తరగతి (Class 8)" selected>8వ తరగతి (Class 8)</option>
+                <option value="9వ తరగతి (Class 9)">9వ తరగతి (Class 9)</option>
+                <option value="10వ తరగతి (Class 10)">10వ తరగతి (Class 10)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="reg-email">ఈమెయిల్ (Email)</label>
+              <input type="email" id="reg-email" class="form-control" placeholder="student@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="reg-password">పాస్‌వర్డ్ (Password - కనీసం 6 అక్షరాలు)</label>
+              <div class="password-wrapper">
+                <input type="password" id="reg-password" class="form-control" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                <button type="button" class="toggle-password-btn" data-target="reg-password" title="Show / Hide Password">👁️</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reg-confirm-password">కన్ఫర్మ్ పాస్‌వర్డ్ (Confirm Password)</label>
+              <div class="password-wrapper">
+                <input type="password" id="reg-confirm-password" class="form-control" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                <button type="button" class="toggle-password-btn" data-target="reg-confirm-password" title="Show / Hide Password">👁️</button>
+              </div>
+            </div>
+            <div id="register-error" class="auth-error-msg hidden"></div>
+            <div id="register-success" class="auth-success-msg hidden"></div>
+            <button type="submit" class="auth-submit-btn">నమోదు చేసుకోండి (Register) ➔</button>
+            <p class="auth-switch-text">
+              ఇప్పటికే ఖాతా ఉందా? <a href="#" id="switch-to-login">ఇక్కడ లాగిన్ అవ్వండి (Login)</a>
+            </p>
+          </form>
+
+          <!-- Guest Access Option -->
+          <div class="guest-divider">
+            <span>లేదా (OR)</span>
+          </div>
+          <button type="button" id="guest-enter-btn" class="guest-enter-btn">
+            🚀 అతిథిగా ప్రవేశించండి (Explore as Guest)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MAIN APPLICATION (Shown After Login / Authentication) -->
+    <div id="main-app" class="main-app hidden">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="logo-badge">
+            <span class="logo-icon">🌿</span>
+            <div class="logo-text">
+              <h1 class="logo-title">విద్యామిత్ర <span class="logo-sub">VidyaMitra</span></h1>
+              <p class="logo-tagline">మీ భాషలో నేర్చుకోండి. మీ శైలిలో అర్థం చేసుకోండి.</p>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-user-area" id="header-user-area">
+            <div class="user-profile-badge" id="user-profile-badge">
+              <span class="user-avatar-icon">🎓</span>
+              <span class="user-name" id="user-display-name">విద్యార్థి</span>
+              <button type="button" class="logout-btn" id="logout-btn" title="లాగౌట్ (Logout)">🚪 లాగౌట్</button>
+            </div>
+          </div>
+          <div class="lang-toggle" role="group" aria-label="భాష ఎంపిక">
+            <button type="button" class="lang-btn active" data-lang="te" id="lang-te">తెలుగు</button>
+            <button type="button" class="lang-btn" data-lang="en" id="lang-en">English</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <!-- Welcome Banner & Topic Suggestions -->
+        <section class="topics-section">
+          <h2 class="section-label" id="lbl-topics">సిలబస్ పాఠాలు (Available Topics):</h2>
+          <div class="topic-chips" id="topic-chips">
+            <button class="topic-chip" data-query="కిరణజన్య సంయోగక్రియ అంటే ఏమిటి?">
+              🌱 కిరణజన్య సంయోగక్రియ (Photosynthesis)
+            </button>
+            <button class="topic-chip" data-query="బలం మరియు చలనం అంటే ఏమిటి?">
+              🚀 బలం మరియు చలనం (Force & Motion)
+            </button>
+            <button class="topic-chip" data-query="ఘర్షణ బలం ఎలా పనిచేస్తుంది?">
+              👟 ఘర్షణ (Friction)
+            </button>
+            <button class="topic-chip" data-query="జల చక్రం అంటే ఏమిటి?">
+              💧 జల చక్రం (Water Cycle)
+            </button>
+          </div>
+        </section>
+
+        <!-- Interaction Card (Voice & Text Input) -->
+        <section class="interaction-card">
+          <!-- Voice Recording Section -->
+          <div class="voice-box">
+            <button id="mic-btn" class="mic-button" aria-label="మాట్లాడటానికి నొక్కండి">
+              <span class="mic-icon" id="mic-icon">🎙️</span>
+              <span class="mic-pulse"></span>
+            </button>
+            <div class="voice-status">
+              <span id="voice-status-text" class="status-text">మాట్లాడటానికి మైక్ బటన్ నొక్కండి (Click mic to speak)</span>
+              <div id="recording-timer" class="recording-timer hidden">🔴 00:00</div>
+            </div>
+          </div>
+
+          <!-- Speech-to-Text Converted Display Banner -->
+          <div id="stt-live-banner" class="stt-live-banner hidden">
+            <div class="stt-live-badge">
+              <span class="stt-pulse-dot"></span>
+              <span id="stt-live-label">🎙️ స్పీచ్ నుండి గుర్తించిన పాఠ్యం (Speech Converted to Text):</span>
+            </div>
+            <div class="stt-live-text" id="stt-live-text">...</div>
+          </div>
+
+          <div class="divider">
+            <span>లేదా (OR)</span>
+          </div>
+
+          <!-- Text Input Section -->
+          <form id="text-form" class="text-form">
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="question-input" 
+                class="question-input" 
+                placeholder="మీ ప్రశ్నను ఇక్కడ టైప్ చేయండి... (e.g. కిరణజన్య సంయోగక్రియ అంటే ఏమిటి?)"
+                autocomplete="off"
+              >
+              <button type="submit" id="submit-btn" class="submit-button" aria-label="ప్రశ్న పంపండి">
+                <span>అడుగు</span>
+                <span class="btn-arrow">➔</span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Progress / Pipeline Status -->
+        <section id="progress-box" class="progress-box hidden" aria-live="polite">
+          <div class="progress-indicator">
+            <div class="spinner"></div>
+            <div class="progress-steps">
+              <div class="step" id="step-stt">1. గొంతు గుర్తింపు (Gnani Prisma STT)</div>
+              <div class="step" id="step-llm">2. పాఠం విశ్లేషణ & సమాధానం (Gemini AI Tutor)</div>
+              <div class="step" id="step-tts">3. స్పష్టమైన ఆడియో తయారీ (Gnani Timbre TTS)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results Card -->
+        <section id="results-card" class="results-card hidden" aria-live="polite">
+          <div class="result-header">
+            <div class="topic-tag" id="res-topic">Photosynthesis</div>
+            <div class="timing-badge" id="res-timings">⚡ 0.0s</div>
+          </div>
+
+          <!-- Detected Question Bubble -->
+          <div class="question-bubble" id="res-question-box">
+            <span class="bubble-icon">🗣️</span>
+            <div>
+              <div class="bubble-title" id="lbl-question">మీ ప్రశ్న (Your Question):</div>
+              <div class="bubble-text" id="res-question">...</div>
+            </div>
+          </div>
+
+          <!-- AI Answer -->
+          <div class="answer-box">
+            <div class="answer-header">
+              <span class="tutor-avatar">🤖</span>
+              <div>
+                <div class="tutor-name">విద్యామిత్ర సమాధానం (Tutor Explanation):</div>
+                <div class="tutor-source" id="res-source">Curriculum Grounded</div>
+              </div>
+            </div>
+            <div class="answer-text" id="res-answer">...</div>
+          </div>
+
+          <!-- Real-world Example -->
+          <div class="example-box" id="res-example-box">
+            <div class="box-label">💡 రోజువారీ ఉదాహరణ (Daily-life Example):</div>
+            <div class="example-text" id="res-example">...</div>
+          </div>
+
+          <!-- Key Terms -->
+          <div class="key-terms-box" id="res-terms-box">
+            <div class="box-label">🔑 ముఖ్యమైన పదాలు (Key Vocabulary):</div>
+            <div class="terms-list" id="res-terms"></div>
+          </div>
+
+          <!-- Audio Player -->
+          <div class="audio-player-box" id="res-audio-box">
+            <div class="audio-header">
+              <span>🔊 సమాధానాన్ని వినండి (Listen to Explanation):</span>
+              <span class="voice-tag">Gnani Suhana (Telugu)</span>
+            </div>
+            <audio id="audio-player" controls preload="auto" class="native-audio">
+              మీ బ్రౌజర్ ఆడియోను సపోర్ట్ చేయదు.
+            </audio>
+          </div>
+
+          <!-- Follow-up & Quiz Actions -->
+          <div class="action-buttons-box" id="res-actions-box">
+            <button type="button" class="action-btn quiz-launch-btn" id="launch-quiz-btn">
+              <span>🎯 ఈ పాఠంపై క్విజ్ రాయండి (Take Quiz)</span>
+            </button>
+          </div>
+
+          <!-- Out-of-scope Alert -->
+          <div class="oos-notice hidden" id="res-oos-notice">
+            ℹ️ ఈ ప్రశ్న ప్రస్తుత 8వ తరగతి సిలబస్‌లో లేదు. దయచేసి పైన ఇచ్చిన పాఠాలలో ఒకదానిని అడగండి.
+          </div>
+        </section>
+
+        <!-- Quiz Modal / Section -->
+        <section id="quiz-card" class="quiz-card hidden" aria-live="polite">
+          <div class="quiz-header">
+            <div>
+              <h2 class="quiz-title" id="quiz-title">🎯 పాఠం క్విజ్ (Lesson Quiz)</h2>
+              <p class="quiz-subtitle" id="quiz-subtitle">మీ అవగాహనను పరీక్షించుకోండి (Test your understanding)</p>
+            </div>
+            <button type="button" class="close-quiz-btn" id="close-quiz-btn" aria-label="క్విజ్ మూసివేయి">✕</button>
+          </div>
+
+          <!-- Questions Container -->
+          <form id="quiz-form" class="quiz-form">
+            <div id="quiz-questions-list" class="quiz-questions-list">
+              <!-- Questions rendered via JS -->
+            </div>
+            <div class="quiz-submit-box">
+              <button type="submit" id="quiz-submit-btn" class="quiz-submit-button">
+                <span>సమాధానాలు సమర్పించు (Submit Quiz)</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Quiz Results Box -->
+          <div id="quiz-results-box" class="quiz-results-box hidden">
+            <div class="score-banner" id="score-banner">
+              <div class="score-number" id="score-number">2 / 2</div>
+              <div class="score-text" id="score-text">అద్భుతం!</div>
+            </div>
+            <div id="quiz-feedback-list" class="quiz-feedback-list"></div>
+            <div class="quiz-retry-box">
+              <button type="button" id="quiz-retry-btn" class="quiz-retry-button">
+                🔄 మళ్లీ రాయండి (Retake Quiz)
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p>VidyaMitra • Built for Gnani AI Challenge • Powered by Gnani Prisma, Timbre & Google Gemini</p>
+      </footer>
+    </div>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
