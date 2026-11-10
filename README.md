@@ -95,7 +95,6 @@ VidyaMitra/
 │       └── audio/           # Generated speech audio files
 ├── tests/
 │   └── test_voice_and_tutor.py  # Full integration test suite
-├── docs/                    # Architectural documents, PRD, and Render deployment
 ├── render.yaml              # Render.com Blueprint configuration
 ├── .python-version          # Python 3.11 runtime lock
 ├── vidyamitra.db            # SQLite persistence
