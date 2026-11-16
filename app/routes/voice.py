@@ -51,6 +51,8 @@ async def transcribe(
 async def voice_ask(
     audio_file: UploadFile = File(...),
     language: str = Form("te"),
+    subject: str = Form("Science"),
+    student_class: str = Form("Class 8"),
     play_audio: bool = Form(True),
     previous_topic: Optional[str] = Form(None)
 ):
@@ -86,6 +88,8 @@ async def voice_ask(
     tutor_result = generate_tutor_response(
         question=transcript,
         language=language,
+        subject=subject,
+        student_class=student_class,
         previous_topic=previous_topic
     )
 

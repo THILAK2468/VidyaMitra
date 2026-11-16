@@ -138,22 +138,34 @@
 
       <!-- Main Content Area -->
       <main class="main-content">
-        <!-- Welcome Banner & Topic Suggestions -->
+        <!-- Welcome Banner & Subject / Topic Suggestions -->
         <section class="topics-section">
-          <h2 class="section-label" id="lbl-topics">సిలబస్ పాఠాలు (Available Topics):</h2>
+          <!-- Multi-Subject Selector Bar -->
+          <div class="subject-selector-bar">
+            <span class="subject-bar-label" id="lbl-select-subject">విషయాన్ని ఎంచుకోండి (Choose Subject):</span>
+            <div class="subject-pills" id="subject-pills" role="tablist">
+              <button type="button" class="subject-pill active" data-subject="Science" id="subj-science">
+                <span class="subj-icon">🌿</span>
+                <span class="subj-name">సైన్స్ (Science)</span>
+              </button>
+              <button type="button" class="subject-pill" data-subject="Mathematics" id="subj-maths">
+                <span class="subj-icon">📐</span>
+                <span class="subj-name">గణితం (Maths)</span>
+              </button>
+              <button type="button" class="subject-pill" data-subject="Social Studies" id="subj-social">
+                <span class="subj-icon">🌍</span>
+                <span class="subj-name">సాంఘిక శాస్త్రం (Social)</span>
+              </button>
+              <button type="button" class="subject-pill" data-subject="English" id="subj-english">
+                <span class="subj-icon">📖</span>
+                <span class="subj-name">ఇంగ్లీష్ (English)</span>
+              </button>
+            </div>
+          </div>
+
+          <h2 class="section-label" id="lbl-topics">సూచించిన పాఠాలు (Suggested Topics):</h2>
           <div class="topic-chips" id="topic-chips">
-            <button class="topic-chip" data-query="కిరణజన్య సంయోగక్రియ అంటే ఏమిటి?">
-              🌱 కిరణజన్య సంయోగక్రియ (Photosynthesis)
-            </button>
-            <button class="topic-chip" data-query="బలం మరియు చలనం అంటే ఏమిటి?">
-              🚀 బలం మరియు చలనం (Force & Motion)
-            </button>
-            <button class="topic-chip" data-query="ఘర్షణ బలం ఎలా పనిచేస్తుంది?">
-              👟 ఘర్షణ (Friction)
-            </button>
-            <button class="topic-chip" data-query="జల చక్రం అంటే ఏమిటి?">
-              💧 జల చక్రం (Water Cycle)
-            </button>
+            <!-- Dynamically populated based on active subject -->
           </div>
         </section>
 

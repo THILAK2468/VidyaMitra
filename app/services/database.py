@@ -176,7 +176,12 @@ def seed_quiz_questions(cursor):
     """, sample_questions)
 
 
-def get_quiz_by_topic(topic_id: str, language: str = "te") -> List[Dict[str, Any]]:
+def get_quiz_by_topic(
+    topic_id: str,
+    language: str = "te",
+    subject: str = "Science",
+    student_class: str = "Class 8"
+) -> List[Dict[str, Any]]:
     """Fetches quiz questions for a topic. If not in DB, dynamically generates them via Gemini."""
     conn = get_db()
     cursor = conn.cursor()
@@ -192,7 +197,7 @@ def get_quiz_by_topic(topic_id: str, language: str = "te") -> List[Dict[str, Any
 
     # If no questions exist for this topic, dynamically generate with Gemini and persist!
     if not rows:
-        return generate_dynamic_quiz_questions(topic_id, language=language)
+        return generate_dynamic_quiz_questions(topic_id, language=language, subject=subject, student_class=student_class)
 
     questions = []
     is_te = language.lower().startswith("te")
@@ -208,18 +213,21 @@ def get_quiz_by_topic(topic_id: str, language: str = "te") -> List[Dict[str, Any
     return questions
 
 
-def generate_dynamic_quiz_questions(topic_name: str, language: str = "te") -> List[Dict[str, Any]]:
-    """Uses Google Gemini to generate 2 Class 8 Science MCQs in real-time and persists them in SQLite."""
+def generate_dynamic_quiz_questions(
+    topic_name: str,
+    language: str = "te",
+    subject: str = "Science",
+    student_class: str = "Class 8"
+) -> List[Dict[str, Any]]:
+    """Uses Google Gemini to generate 2 MCQs in real-time across any subject/grade and persists them in SQLite."""
     import os
     import httpx
     api_key = os.getenv("GEMINI_API_KEY")
     model = os.getenv("LLM_MODEL", "gemini-3.5-flash-lite")
-    if not api_key:
-        return []
-
-    prompt = f"""
-You are a Class 8 Science teacher.
-Generate 2 multiple-choice questions with 4 options each for Class 8 Science topic: '{topic_name}'.
+    if api_key:
+        prompt = f"""
+You are an expert school teacher teaching {student_class} {subject}.
+Generate 2 multiple-choice questions with 4 options each for the {student_class} {subject} topic: '{topic_name}'.
 Return STRICTLY a JSON list of 2 objects with this schema:
 [
   {{
@@ -234,57 +242,116 @@ Return STRICTLY a JSON list of 2 objects with this schema:
   }}
 ]
 """
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.2}
-    }
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"response_mime_type": "application/json", "temperature": 0.2}
+        }
 
-    try:
-        res = httpx.post(url, json=payload, timeout=20.0)
-        if res.status_code == 200:
-            data = res.json()
-            raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
-            q_list = json.loads(raw_text)
+        try:
+            res = httpx.post(url, json=payload, timeout=20.0)
+            if res.status_code == 200:
+                data = res.json()
+                raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
+                q_list = json.loads(raw_text)
 
-            conn = get_db()
-            cursor = conn.cursor()
-            saved_questions = []
+                conn = get_db()
+                cursor = conn.cursor()
+                saved_questions = []
 
-            for idx, q in enumerate(q_list):
-                qid = f"dyn_{abs(hash(topic_name)) % 10000}_{idx}"
-                cursor.execute("""
-                INSERT OR REPLACE INTO quiz_questions (
-                    id, topic_id, topic_name, question_te, question_en,
-                    options_te, options_en, correct_index, explanation_te, explanation_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    qid,
-                    topic_name,
-                    topic_name,
-                    q["question_te"],
-                    q["question_en"],
-                    json.dumps(q["options_te"], ensure_ascii=False),
-                    json.dumps(q["options_en"]),
-                    q["correct_index"],
-                    q["explanation_te"],
-                    q["explanation_en"]
-                ))
-                is_te = language.lower().startswith("te")
-                saved_questions.append({
-                    "id": qid,
-                    "topic_id": topic_name,
-                    "topic_name": topic_name,
-                    "question": q["question_te"] if is_te else q["question_en"],
-                    "options": q["options_te"] if is_te else q["options_en"]
-                })
-            conn.commit()
-            conn.close()
-            return saved_questions
-    except Exception as e:
-        pass
+                for idx, q in enumerate(q_list):
+                    qid = f"dyn_{abs(hash(topic_name)) % 10000}_{idx}"
+                    cursor.execute("""
+                    INSERT OR REPLACE INTO quiz_questions (
+                        id, topic_id, topic_name, question_te, question_en,
+                        options_te, options_en, correct_index, explanation_te, explanation_en
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        qid,
+                        topic_name,
+                        topic_name,
+                        q["question_te"],
+                        q["question_en"],
+                        json.dumps(q["options_te"], ensure_ascii=False),
+                        json.dumps(q["options_en"]),
+                        q["correct_index"],
+                        q["explanation_te"],
+                        q["explanation_en"]
+                    ))
+                    is_te = language.lower().startswith("te")
+                    saved_questions.append({
+                        "id": qid,
+                        "topic_id": topic_name,
+                        "topic_name": topic_name,
+                        "question": q["question_te"] if is_te else q["question_en"],
+                        "options": q["options_te"] if is_te else q["options_en"]
+                    })
+                conn.commit()
+                conn.close()
+                return saved_questions
+        except Exception:
+            pass
 
-    return []
+    # Reliable conceptual fallback when Gemini API key is missing or offline
+    conn = get_db()
+    cursor = conn.cursor()
+    qid1 = f"fb_{abs(hash(topic_name)) % 10000}_1"
+    qid2 = f"fb_{abs(hash(topic_name)) % 10000}_2"
+    is_te = language.lower().startswith("te")
+
+    fb_items = [
+        (
+            qid1,
+            f"{topic_name} భావన గురించి సరైన వాక్యాన్ని గుర్తించండి.",
+            f"Identify the correct statement regarding {topic_name}.",
+            [f"{topic_name} ముఖ్యమైన ప్రాథమిక భావన.", "దీనికి నిత్యజీవితంలో ఎలాంటి ప్రాధాన్యత లేదు.", "ఇది కేవలం సిద్ధాంతం మాత్రమే.", "పైవేవీ కావు."],
+            [f"{topic_name} is a fundamental concept.", "It has no practical importance.", "It is only theoretical.", "None of the above."],
+            0,
+            f"{topic_name} అనేది {student_class} {subject} పాఠ్యాంశాల్లో ప్రధానమైన భావన.",
+            f"{topic_name} is an essential core concept in {student_class} {subject}."
+        ),
+        (
+            qid2,
+            f"{student_class} {subject} లో {topic_name} యొక్క ముఖ్య ఉద్దేశ్యం ఏమిటి?",
+            f"What is the key purpose of {topic_name} in {student_class} {subject}?",
+            ["ప్రాథమిక సూత్రాలను అర్థం చేసుకోవడం మరియు వర్తింపజేయడం.", "సమాధానాలను బట్టీ పట్టడం మాత్రమే.", "సిలబస్ పరిధిని తగ్గించడం.", "పైవేవీ కావు."],
+            ["Understanding and applying foundational principles.", "Only memorizing facts without understanding.", "Reducing syllabus coverage.", "None of the above."],
+            0,
+            f"ఈ అంశం విద్యార్థులకు {subject} పై లోతైన అవగాహన కల్పిస్తుంది.",
+            f"This topic builds deeper conceptual understanding in {subject}."
+        )
+    ]
+
+    saved_fallbacks = []
+    for item in fb_items:
+        cursor.execute("""
+        INSERT OR REPLACE INTO quiz_questions (
+            id, topic_id, topic_name, question_te, question_en,
+            options_te, options_en, correct_index, explanation_te, explanation_en
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            item[0],
+            topic_name,
+            topic_name,
+            item[1],
+            item[2],
+            json.dumps(item[3], ensure_ascii=False),
+            json.dumps(item[4]),
+            item[5],
+            item[6],
+            item[7]
+        ))
+        saved_fallbacks.append({
+            "id": item[0],
+            "topic_id": topic_name,
+            "topic_name": topic_name,
+            "question": item[1] if is_te else item[2],
+            "options": item[3] if is_te else item[4]
+        })
+
+    conn.commit()
+    conn.close()
+    return saved_fallbacks
 
 
 def submit_quiz_answers(topic_id: str, answers: Dict[str, int], language: str = "te") -> Dict[str, Any]:

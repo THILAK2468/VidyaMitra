@@ -142,9 +142,73 @@ body {
 .topics-section {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  padding: 16px 20px;
+  padding: 18px 20px;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Multi-Subject Selector Bar */
+.subject-selector-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.subject-bar-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subject-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subject-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F8FAFC;
+  border: 1.5px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.subject-pill:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.subject-pill.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+}
+
+.subject-pill .subj-icon {
+  font-size: 15px;
+}
+
+.subject-pill.active .subj-name {
+  color: #FFFFFF;
 }
 
 .section-label {

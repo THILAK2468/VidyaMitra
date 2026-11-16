@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // State
   let currentLanguage = 'te';
+  let currentSubject = 'Science';
   let mediaRecorder = null;
   let audioChunks = [];
   let isRecording = false;
@@ -16,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const langEnBtn = document.getElementById('lang-en');
   const authLangTeBtn = document.getElementById('auth-lang-te');
   const authLangEnBtn = document.getElementById('auth-lang-en');
-  const topicChips = document.querySelectorAll('.topic-chip');
+  const subjectPills = document.querySelectorAll('.subject-pill');
+  const topicChipsContainer = document.getElementById('topic-chips');
+  const lblSelectSubject = document.getElementById('lbl-select-subject');
   const textForm = document.getElementById('text-form');
   const questionInput = document.getElementById('question-input');
   const submitBtn = document.getElementById('submit-btn');
@@ -52,11 +55,121 @@ document.addEventListener('DOMContentLoaded', () => {
   const quizFeedbackList = document.getElementById('quiz-feedback-list');
   const quizRetryBtn = document.getElementById('quiz-retry-btn');
 
+  // Multi-Subject Suggested Topics Map
+  const SUBJECT_TOPICS = {
+    Science: {
+      te: [
+        { icon: "🌱", name: "కిరణజన్య సంయోగక్రియ (Photosynthesis)", query: "కిరణజన్య సంయోగక్రియ అంటే ఏమిటి? మొక్కలు ఆహారాన్ని ఎలా తయారుచేసుకుంటాయి?" },
+        { icon: "🚀", name: "బలం మరియు చలనం (Force & Motion)", query: "బలం మరియు చలనం అంటే ఏమిటి? ఉదాహరణలతో వివరించండి." },
+        { icon: "👟", name: "ఘర్షణ బలం (Friction)", query: "ఘర్షణ బలం ఎలా పనిచేస్తుంది? దీని ఉపయోగాలు ఏమిటి?" },
+        { icon: "💧", name: "జల చక్రం (Water Cycle)", query: "జల చక్రం అంటే ఏమిటి? వర్షం ఎలా కురుస్తుంది?" }
+      ],
+      en: [
+        { icon: "🌱", name: "Photosynthesis", query: "What is photosynthesis and how do plants prepare food?" },
+        { icon: "🚀", name: "Force & Motion", query: "What is force and motion? Explain with everyday examples." },
+        { icon: "👟", name: "Friction", query: "How does frictional force work and what are its advantages?" },
+        { icon: "💧", name: "Water Cycle", query: "What is the water cycle and how does it function?" }
+      ]
+    },
+    Mathematics: {
+      te: [
+        { icon: "🔢", name: "బీజగణితం (Algebra)", query: "బీజగణితంలో చరరాశులు మరియు సమాసాలు అంటే ఏమిటి? ఉదాహరణతో వివరించండి." },
+        { icon: "⚖️", name: "సరళ సమీకరణాలు (Linear Equations)", query: "సరళ సమీకరణాలు ఎలా సాధించాలి? ఒక ఉదాహరణతో వివరించండి." },
+        { icon: "🍰", name: "భిన్నాలు & దశాంశాలు (Fractions)", query: "భిన్నాలను కూడడం, తీసివేయడం సులభంగా ఎలా చేయాలి?" },
+        { icon: "📐", name: "రేఖాగణితం (Geometry)", query: "త్రిభుజాల రకాలు మరియు వాటి కోణాల మొత్తం ధర్మాలు ఏమిటి?" }
+      ],
+      en: [
+        { icon: "🔢", name: "Algebra", query: "What are variables and expressions in algebra? Explain with an example." },
+        { icon: "⚖️", name: "Linear Equations", query: "How to solve linear equations step-by-step?" },
+        { icon: "🍰", name: "Fractions & Decimals", query: "How to add, subtract, and simplify fractions easily?" },
+        { icon: "📐", name: "Geometry & Shapes", query: "What are the types of triangles and properties of their angles?" }
+      ]
+    },
+    "Social Studies": {
+      te: [
+        { icon: "🌍", name: "భూమి అంతర్నిర్మాణం (Earth's Layers)", query: "భూమి అంతర్నిర్మాణ పొరలు (భూపటలం, భూప్రావారం, భూకేంద్రం) గురించి వివరించండి." },
+        { icon: "📜", name: "భారత రాజ్యాంగం (Constitution)", query: "భారత రాజ్యాంగం ముఖ్య లక్షణాలు మరియు ప్రాథమిక హక్కులు ఏమిటి?" },
+        { icon: "🇮🇳", name: "స్వాతంత్రోద్యమం (Freedom Movement)", query: "భారత స్వాతంత్ర సంగ్రామంలో ముఖ్యమైన మైలురాళ్లు ఏమిటి?" },
+        { icon: "🌦️", name: "శీతోష్ణస్థితి (Climate)", query: "వాతావరణం మరియు శీతోష్ణస్థితి మధ్య గల ముఖ్యమైన తేడాలు ఏమిటి?" }
+      ],
+      en: [
+        { icon: "🌍", name: "Earth's Layers", query: "Explain the layers of the Earth: Crust, Mantle, and Core." },
+        { icon: "📜", name: "Indian Constitution", query: "What are the salient features and fundamental rights of the Indian Constitution?" },
+        { icon: "🇮🇳", name: "Freedom Movement", query: "What were the major milestones of the Indian Independence Movement?" },
+        { icon: "🌦️", name: "Weather & Climate", query: "What is the difference between weather and climate?" }
+      ]
+    },
+    English: {
+      te: [
+        { icon: "⏱️", name: "Tenses (కాలాలు)", query: "Present, Past, Future Tenses గురించి సులభమైన ఉదాహరణలతో వివరించండి." },
+        { icon: "🏷️", name: "Parts of Speech (భాషాభాగాలు)", query: "ఇంగ్లీష్‌లోని 8 Parts of Speech ఏమిటి? ప్రతిదానికి ఉదాహరణ ఇవ్వండి." },
+        { icon: "✍️", name: "వాక్య నిర్మాణం (Sentence Building)", query: "ఇంగ్లీష్‌లో సరైన వాక్యాలు (Subject-Verb-Object) ఎలా నిర్మించాలి?" },
+        { icon: "📚", name: "Active & Passive Voice", query: "Active Voice ను Passive Voice గా మార్చే సరళమైన నియమాలు ఏమిటి?" }
+      ],
+      en: [
+        { icon: "⏱️", name: "English Tenses", query: "Explain Present, Past, and Future Tenses with simple examples." },
+        { icon: "🏷️", name: "Parts of Speech", query: "What are the 8 parts of speech in English with examples?" },
+        { icon: "✍️", name: "Sentence Building", query: "How to form grammatically correct English sentences?" },
+        { icon: "📚", name: "Active & Passive Voice", query: "What are the rules to convert Active Voice into Passive Voice?" }
+      ]
+    }
+  };
+
+  // Helper to get logged-in student class
+  function getStudentClass() {
+    try {
+      const stored = localStorage.getItem('vidyamitra_user');
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (u && u.student_class) return u.student_class;
+      }
+    } catch (e) {}
+    return '8వ తరగతి (Class 8)';
+  }
+
+  // Render Topic Chips Dynamically based on currentSubject and currentLanguage
+  function renderTopicChips() {
+    if (!topicChipsContainer) return;
+    topicChipsContainer.innerHTML = '';
+    const subjectData = SUBJECT_TOPICS[currentSubject] || SUBJECT_TOPICS.Science;
+    const topics = subjectData[currentLanguage] || subjectData.te;
+
+    topics.forEach(t => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'topic-chip';
+      chip.setAttribute('data-query', t.query);
+      chip.innerHTML = `${t.icon} ${t.name}`;
+      chip.addEventListener('click', () => {
+        questionInput.value = t.query;
+        submitTextQuestion(t.query);
+      });
+      topicChipsContainer.appendChild(chip);
+    });
+  }
+
+  // Subject Pills Click Handlers
+  subjectPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      subjectPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      currentSubject = pill.getAttribute('data-subject') || 'Science';
+      renderTopicChips();
+    });
+  });
+
   // UI Translations
   const UI_TEXT = {
     te: {
       tagline: 'మీ భాషలో నేర్చుకోండి. మీ శైలిలో అర్థం చేసుకోండి.',
       topicsLabel: 'సిలబస్ పాఠాలు (Available Topics):',
+      selectSubject: 'విషయాన్ని ఎంచుకోండి (Choose Subject):',
+      subjects: {
+        Science: 'సైన్స్ (Science)',
+        Mathematics: 'గణితం (Mathematics)',
+        "Social Studies": 'సాంఘిక శాస్త్రం (Social Studies)',
+        English: 'ఇంగ్లీష్ (English)'
+      },
       placeholder: 'మీ ప్రశ్నను ఇక్కడ టైప్ చేయండి... (e.g. కిరణజన్య సంయోగక్రియ అంటే ఏమిటి?)',
       submitBtn: 'అడుగు',
       micReady: 'మాట్లాడటానికి మైక్ బటన్ నొక్కండి (Click mic to speak)',
@@ -68,14 +181,14 @@ document.addEventListener('DOMContentLoaded', () => {
       termsTitle: '🔑 ముఖ్యమైన పదాలు (Key Vocabulary):',
       audioTitle: '🔊 సమాధానాన్ని వినండి (Click to Listen):',
       audioHint: '▶️ వినడానికి ప్లే బటన్ నొక్కండి (Click play to listen)',
-      oosNotice: 'ℹ️ ఈ ప్రశ్న ప్రస్తుత 8వ తరగతి సిలబస్‌లో లేదు. దయచేసి పైన ఇచ్చిన పాఠాలలో ఒకదానిని అడగండి.',
+      oosNotice: 'ℹ️ ఈ ప్రశ్న ప్రస్తుత సిలబస్‌లో లేదు. దయచేసి పైన ఇచ్చిన పాఠాలలో ఒకదానిని అడగండి.',
       quizLaunch: '🎯 ఈ పాఠంపై క్విజ్ రాయండి (Take Quiz)',
       quizSubmit: 'సమాధానాలు సమర్పించు (Submit Quiz)',
       quizRetry: '🔄 మళ్లీ రాయండి (Retake Quiz)',
       sttLabel: '🎙️ స్పీచ్ నుండి గుర్తించిన పాఠ్యం (Speech Converted to Text):',
       auth: {
-        subtitle: 'మీ భాషలో నేర్చుకోండి • AI Science Learning Companion',
-        desc: '8వ తరగతి సైన్స్ పాఠాలను తెలుగులో సులభంగా అర్థం చేసుకోండి.',
+        subtitle: 'మీ భాషలో నేర్చుకోండి • AI Multi-Subject Learning Companion',
+        desc: '6 నుండి 10వ తరగతి వరకు సైన్స్, గణితం, సాంఘిక, ఇంగ్లీష్ పాఠాలను తెలుగులో సులభంగా అర్థం చేసుకోండి.',
         tabLogin: 'లాగిన్ (Login)',
         tabRegister: 'నమోదు (Register)',
         loginEmail: 'ఈమెయిల్ (Email)',
@@ -99,6 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
     en: {
       tagline: 'Learn in your language. Understand in your way.',
       topicsLabel: 'Available Topics:',
+      selectSubject: 'Choose Subject:',
+      subjects: {
+        Science: 'Science',
+        Mathematics: 'Mathematics',
+        "Social Studies": 'Social Studies',
+        English: 'English'
+      },
       placeholder: 'Type your question here... (e.g. What is Photosynthesis?)',
       submitBtn: 'Ask',
       micReady: 'Click the mic button to speak',
@@ -110,14 +230,14 @@ document.addEventListener('DOMContentLoaded', () => {
       termsTitle: '🔑 Key Vocabulary:',
       audioTitle: '🔊 Listen to Explanation (Click to Listen):',
       audioHint: '▶️ Click play button to listen to explanation',
-      oosNotice: 'ℹ️ This question is outside our current Class 8 Science syllabus. Please choose one of the topics above.',
+      oosNotice: 'ℹ️ This question is outside our current curriculum. Please choose one of the topics above.',
       quizLaunch: '🎯 Take Quiz on this Topic',
       quizSubmit: 'Submit Quiz',
       quizRetry: '🔄 Retake Quiz',
       sttLabel: '🎙️ Speech Converted to Text:',
       auth: {
-        subtitle: 'Learn in your language • AI Science Learning Companion',
-        desc: 'Understand Class 8 Science concepts with ease.',
+        subtitle: 'Learn in your language • AI Multi-Subject Learning Companion',
+        desc: 'Understand Science, Mathematics, Social Studies & English for Classes 6 to 10 with ease.',
         tabLogin: 'Login',
         tabRegister: 'Register',
         loginEmail: 'Email',
@@ -166,6 +286,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const t = UI_TEXT[lang];
+
+    // Subject Selector Updates
+    if (lblSelectSubject) lblSelectSubject.textContent = t.selectSubject;
+    subjectPills.forEach(pill => {
+      const subj = pill.getAttribute('data-subject');
+      const nameSpan = pill.querySelector('.subj-name');
+      if (nameSpan && t.subjects && t.subjects[subj]) {
+        nameSpan.textContent = t.subjects[subj];
+      }
+    });
+
+    // Refresh suggested topic chips for the active subject and newly selected language
+    renderTopicChips();
 
     // Main App Text Updates
     const taglineEl = document.querySelector('.logo-tagline');
@@ -305,15 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (authLangTeBtn) authLangTeBtn.addEventListener('click', () => setLanguage('te'));
   if (authLangEnBtn) authLangEnBtn.addEventListener('click', () => setLanguage('en'));
 
-  // Topic Chips Click
-  topicChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const query = chip.getAttribute('data-query');
-      questionInput.value = query;
-      submitTextQuestion(query);
-    });
-  });
-
   // Text Form Submission
   textForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -321,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (query) submitTextQuestion(query);
   });
 
-  // Submit Text Question to /tutor/ask (Supports Follow-up Context)
+  // Submit Text Question to /tutor/ask (Supports Follow-up Context & Multi-Subject)
   async function submitTextQuestion(query) {
     showProgress(['step-llm', 'step-tts']);
     resetResults();
@@ -333,6 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           question: query,
           language: currentLanguage,
+          subject: currentSubject,
+          student_class: getStudentClass(),
           previous_topic: currentTopic,
           conversation_history: conversationHistory.slice(-2)
         })
@@ -546,6 +672,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const formData = new FormData();
     formData.append('audio_file', audioBlob, 'question.wav');
     formData.append('language', currentLanguage);
+    formData.append('subject', currentSubject);
+    formData.append('student_class', getStudentClass());
     formData.append('play_audio', 'true');
     if (currentTopic) {
       formData.append('previous_topic', currentTopic);
@@ -593,7 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultsCard.classList.remove('hidden');
     resOosNotice.classList.add('hidden');
 
-    resTopic.textContent = data.topic || 'Class 8 Science';
+    resTopic.textContent = data.topic || `${currentSubject} (${getStudentClass()})`;
     resQuestion.textContent = data.transcript || questionInput.value;
     resAnswer.textContent = data.answer || '';
     resSource.textContent = data.source === 'gemini_grounded' ? 'Google Gemini 3.5 Flash (Grounded)' : 'Curriculum Direct';
@@ -675,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       quizTitle.textContent = `🎯 ${topic} - క్విజ్ (Quiz)`;
 
-      const response = await fetch(`/quiz/questions/${encodeURIComponent(topic)}?language=${currentLanguage}`);
+      const response = await fetch(`/quiz/questions/${encodeURIComponent(topic)}?language=${currentLanguage}&subject=${encodeURIComponent(currentSubject)}&student_class=${encodeURIComponent(getStudentClass())}`);
       const data = await response.json();
 
       if (!data.success || !data.questions || data.questions.length === 0) {

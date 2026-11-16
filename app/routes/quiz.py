@@ -30,12 +30,17 @@ async def list_quiz_topics():
 
 
 @router.get("/questions/{topic_id}")
-async def fetch_quiz(topic_id: str, language: str = "te"):
+async def fetch_quiz(
+    topic_id: str,
+    language: str = "te",
+    subject: str = "Science",
+    student_class: str = "Class 8"
+):
     """
-    Fetches quiz questions for a specific topic in Telugu or English.
+    Fetches quiz questions for a specific topic across any subject/grade in Telugu or English.
     Correct answers are omitted for student evaluation integrity.
     """
-    questions = get_quiz_by_topic(topic_id, language=language)
+    questions = get_quiz_by_topic(topic_id, language=language, subject=subject, student_class=student_class)
     if not questions:
         raise HTTPException(
             status_code=404,
