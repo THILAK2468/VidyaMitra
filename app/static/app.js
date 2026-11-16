@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
   const langTeBtn = document.getElementById('lang-te');
   const langEnBtn = document.getElementById('lang-en');
+  const authLangTeBtn = document.getElementById('auth-lang-te');
+  const authLangEnBtn = document.getElementById('auth-lang-en');
   const topicChips = document.querySelectorAll('.topic-chip');
   const textForm = document.getElementById('text-form');
   const questionInput = document.getElementById('question-input');
@@ -64,11 +66,35 @@ document.addEventListener('DOMContentLoaded', () => {
       tutorTitle: 'విద్యామిత్ర సమాధానం (Tutor Explanation):',
       exampleTitle: '💡 రోజువారీ ఉదాహరణ (Daily-life Example):',
       termsTitle: '🔑 ముఖ్యమైన పదాలు (Key Vocabulary):',
-      audioTitle: '🔊 సమాధానాన్ని వినండి (Listen to Explanation):',
+      audioTitle: '🔊 సమాధానాన్ని వినండి (Click to Listen):',
+      audioHint: '▶️ వినడానికి ప్లే బటన్ నొక్కండి (Click play to listen)',
       oosNotice: 'ℹ️ ఈ ప్రశ్న ప్రస్తుత 8వ తరగతి సిలబస్‌లో లేదు. దయచేసి పైన ఇచ్చిన పాఠాలలో ఒకదానిని అడగండి.',
       quizLaunch: '🎯 ఈ పాఠంపై క్విజ్ రాయండి (Take Quiz)',
       quizSubmit: 'సమాధానాలు సమర్పించు (Submit Quiz)',
-      quizRetry: '🔄 మళ్లీ రాయండి (Retake Quiz)'
+      quizRetry: '🔄 మళ్లీ రాయండి (Retake Quiz)',
+      sttLabel: '🎙️ స్పీచ్ నుండి గుర్తించిన పాఠ్యం (Speech Converted to Text):',
+      auth: {
+        subtitle: 'మీ భాషలో నేర్చుకోండి • AI Science Learning Companion',
+        desc: '8వ తరగతి సైన్స్ పాఠాలను తెలుగులో సులభంగా అర్థం చేసుకోండి.',
+        tabLogin: 'లాగిన్ (Login)',
+        tabRegister: 'నమోదు (Register)',
+        loginEmail: 'ఈమెయిల్ (Email)',
+        loginPassword: 'పాస్‌వర్డ్ (Password)',
+        loginBtn: 'లాగిన్ అవ్వండి (Login) ➔',
+        noAccount: 'ఖాతా లేదా?',
+        registerLink: 'ఇక్కడ నమోదు చేసుకోండి (Register)',
+        regName: 'విద్యార్థి పేరు (Student Name)',
+        regNamePlaceholder: 'మీ పూర్తి పేరు',
+        regClass: 'తరగతి (Class / Grade)',
+        regEmail: 'ఈమెయిల్ (Email)',
+        regPassword: 'పాస్‌వర్డ్ (Password - కనీసం 6 అక్షరాలు)',
+        regConfirmPassword: 'కన్ఫర్మ్ పాస్‌వర్డ్ (Confirm Password)',
+        regBtn: 'నమోదు చేసుకోండి (Register) ➔',
+        haveAccount: 'ఇప్పటికే ఖాతా ఉందా?',
+        loginLink: 'ఇక్కడ లాగిన్ అవ్వండి (Login)',
+        guestOr: 'లేదా (OR)',
+        guestBtn: '🚀 అతిథిగా ప్రవేశించండి (Explore as Guest)'
+      }
     },
     en: {
       tagline: 'Learn in your language. Understand in your way.',
@@ -82,47 +108,202 @@ document.addEventListener('DOMContentLoaded', () => {
       tutorTitle: 'VidyaMitra Explanation:',
       exampleTitle: '💡 Daily-life Example:',
       termsTitle: '🔑 Key Vocabulary:',
-      audioTitle: '🔊 Listen to Explanation:',
+      audioTitle: '🔊 Listen to Explanation (Click to Listen):',
+      audioHint: '▶️ Click play button to listen to explanation',
       oosNotice: 'ℹ️ This question is outside our current Class 8 Science syllabus. Please choose one of the topics above.',
       quizLaunch: '🎯 Take Quiz on this Topic',
       quizSubmit: 'Submit Quiz',
-      quizRetry: '🔄 Retake Quiz'
+      quizRetry: '🔄 Retake Quiz',
+      sttLabel: '🎙️ Speech Converted to Text:',
+      auth: {
+        subtitle: 'Learn in your language • AI Science Learning Companion',
+        desc: 'Understand Class 8 Science concepts with ease.',
+        tabLogin: 'Login',
+        tabRegister: 'Register',
+        loginEmail: 'Email',
+        loginPassword: 'Password',
+        loginBtn: 'Sign In / Login ➔',
+        noAccount: "Don't have an account?",
+        registerLink: 'Register here',
+        regName: 'Student Name',
+        regNamePlaceholder: 'Your full name',
+        regClass: 'Class / Grade',
+        regEmail: 'Email',
+        regPassword: 'Password (min 6 characters)',
+        regConfirmPassword: 'Confirm Password',
+        regBtn: 'Create Account / Register ➔',
+        haveAccount: 'Already have an account?',
+        loginLink: 'Sign In here',
+        guestOr: 'OR',
+        guestBtn: '🚀 Continue as Guest'
+      }
     }
   };
 
   function setLanguage(lang) {
     currentLanguage = lang;
-    if (lang === 'te') {
-      langTeBtn.classList.add('active');
-      langEnBtn.classList.remove('active');
-    } else {
-      langEnBtn.classList.add('active');
-      langTeBtn.classList.remove('active');
+    
+    // Synchronize Main Header language toggles
+    if (langTeBtn && langEnBtn) {
+      if (lang === 'te') {
+        langTeBtn.classList.add('active');
+        langEnBtn.classList.remove('active');
+      } else {
+        langEnBtn.classList.add('active');
+        langTeBtn.classList.remove('active');
+      }
+    }
+
+    // Synchronize Auth Screen language toggles
+    if (authLangTeBtn && authLangEnBtn) {
+      if (lang === 'te') {
+        authLangTeBtn.classList.add('active');
+        authLangEnBtn.classList.remove('active');
+      } else {
+        authLangEnBtn.classList.add('active');
+        authLangTeBtn.classList.remove('active');
+      }
     }
 
     const t = UI_TEXT[lang];
-    document.querySelector('.logo-tagline').textContent = t.tagline;
-    document.getElementById('lbl-topics').textContent = t.topicsLabel;
-    questionInput.placeholder = t.placeholder;
-    submitBtn.querySelector('span:first-child').textContent = t.submitBtn;
-    if (!isRecording) voiceStatusText.textContent = t.micReady;
-    document.getElementById('lbl-question').textContent = t.questionTitle;
-    document.querySelector('.tutor-name').textContent = t.tutorTitle;
-    document.querySelector('.example-box .box-label').textContent = t.exampleTitle;
-    document.querySelector('.key-terms-box .box-label').textContent = t.termsTitle;
-    document.querySelector('.audio-header span:first-child').textContent = t.audioTitle;
-    resOosNotice.textContent = t.oosNotice;
-    launchQuizBtn.querySelector('span').textContent = t.quizLaunch;
+
+    // Main App Text Updates
+    const taglineEl = document.querySelector('.logo-tagline');
+    if (taglineEl) taglineEl.textContent = t.tagline;
+
+    const lblTopicsEl = document.getElementById('lbl-topics');
+    if (lblTopicsEl) lblTopicsEl.textContent = t.topicsLabel;
+
+    if (questionInput) questionInput.placeholder = t.placeholder;
+    if (submitBtn) {
+      const submitSpan = submitBtn.querySelector('span:first-child');
+      if (submitSpan) submitSpan.textContent = t.submitBtn;
+    }
+    if (!isRecording && voiceStatusText) voiceStatusText.textContent = t.micReady;
+
+    const lblQuestionEl = document.getElementById('lbl-question');
+    if (lblQuestionEl) lblQuestionEl.textContent = t.questionTitle;
+
+    const tutorNameEl = document.querySelector('.tutor-name');
+    if (tutorNameEl) tutorNameEl.textContent = t.tutorTitle;
+
+    const exampleLabelEl = document.querySelector('.example-box .box-label');
+    if (exampleLabelEl) exampleLabelEl.textContent = t.exampleTitle;
+
+    const termsLabelEl = document.querySelector('.key-terms-box .box-label');
+    if (termsLabelEl) termsLabelEl.textContent = t.termsTitle;
+
+    const audioTitleEl = document.getElementById('lbl-audio-title') || document.querySelector('.audio-header span:first-child');
+    if (audioTitleEl) audioTitleEl.textContent = t.audioTitle;
+
+    const audioHintEl = document.getElementById('audio-hint');
+    if (audioHintEl) audioHintEl.textContent = t.audioHint;
+
+    if (resOosNotice) resOosNotice.textContent = t.oosNotice;
+
+    if (launchQuizBtn) {
+      const quizSpan = launchQuizBtn.querySelector('span');
+      if (quizSpan) quizSpan.textContent = t.quizLaunch;
+    }
+
     const sttLabel = document.getElementById('stt-live-label');
-    if (sttLabel) {
-      sttLabel.textContent = lang === 'te' 
-        ? '🎙️ స్పీచ్ నుండి గుర్తించిన పాఠ్యం (Speech Converted to Text):' 
-        : '🎙️ Speech Converted to Text:';
+    if (sttLabel) sttLabel.textContent = t.sttLabel;
+
+    // Auth Screen Text Updates
+    const a = t.auth;
+    const authSubtitle = document.getElementById('auth-hero-subtitle');
+    if (authSubtitle) authSubtitle.textContent = a.subtitle;
+
+    const authDesc = document.getElementById('auth-hero-desc');
+    if (authDesc) authDesc.textContent = a.desc;
+
+    const tabLoginBtnEl = document.getElementById('tab-login-btn');
+    if (tabLoginBtnEl) tabLoginBtnEl.textContent = a.tabLogin;
+
+    const tabRegisterBtnEl = document.getElementById('tab-register-btn');
+    if (tabRegisterBtnEl) tabRegisterBtnEl.textContent = a.tabRegister;
+
+    const lblLoginEmail = document.getElementById('lbl-login-email');
+    if (lblLoginEmail) lblLoginEmail.textContent = a.loginEmail;
+
+    const lblLoginPassword = document.getElementById('lbl-login-password');
+    if (lblLoginPassword) lblLoginPassword.textContent = a.loginPassword;
+
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+    if (loginSubmitBtn) loginSubmitBtn.textContent = a.loginBtn;
+
+    const lblNoAccount = document.getElementById('lbl-no-account');
+    if (lblNoAccount) lblNoAccount.textContent = a.noAccount;
+
+    const switchToRegisterEl = document.getElementById('switch-to-register');
+    if (switchToRegisterEl) switchToRegisterEl.textContent = a.registerLink;
+
+    const lblRegName = document.getElementById('lbl-reg-name');
+    if (lblRegName) lblRegName.textContent = a.regName;
+
+    const regNameInput = document.getElementById('reg-name');
+    if (regNameInput) regNameInput.placeholder = a.regNamePlaceholder;
+
+    const lblRegClass = document.getElementById('lbl-reg-class');
+    if (lblRegClass) lblRegClass.textContent = a.regClass;
+
+    const lblRegEmail = document.getElementById('lbl-reg-email');
+    if (lblRegEmail) lblRegEmail.textContent = a.regEmail;
+
+    const lblRegPassword = document.getElementById('lbl-reg-password');
+    if (lblRegPassword) lblRegPassword.textContent = a.regPassword;
+
+    const lblRegConfirmPassword = document.getElementById('lbl-reg-confirm-password');
+    if (lblRegConfirmPassword) lblRegConfirmPassword.textContent = a.regConfirmPassword;
+
+    const regSubmitBtn = document.getElementById('reg-submit-btn');
+    if (regSubmitBtn) regSubmitBtn.textContent = a.regBtn;
+
+    const lblHaveAccount = document.getElementById('lbl-have-account');
+    if (lblHaveAccount) lblHaveAccount.textContent = a.haveAccount;
+
+    const switchToLoginEl = document.getElementById('switch-to-login');
+    if (switchToLoginEl) switchToLoginEl.textContent = a.loginLink;
+
+    const lblGuestOr = document.getElementById('lbl-guest-or');
+    if (lblGuestOr) lblGuestOr.textContent = a.guestOr;
+
+    const guestEnterBtnEl = document.getElementById('guest-enter-btn');
+    if (guestEnterBtnEl) guestEnterBtnEl.textContent = a.guestBtn;
+
+    // Update Class dropdown options text
+    const regClassSelect = document.getElementById('reg-class');
+    if (regClassSelect) {
+      const prevIndex = regClassSelect.selectedIndex >= 0 ? regClassSelect.selectedIndex : 2;
+      const classOptions = lang === 'te' ? [
+        { val: "6వ తరగతి (Class 6)", text: "6వ తరగతి (Class 6)" },
+        { val: "7వ తరగతి (Class 7)", text: "7వ తరగతి (Class 7)" },
+        { val: "8వ తరగతి (Class 8)", text: "8వ తరగతి (Class 8)" },
+        { val: "9వ తరగతి (Class 9)", text: "9వ తరగతి (Class 9)" },
+        { val: "10వ తరగతి (Class 10)", text: "10వ తరగతి (Class 10)" }
+      ] : [
+        { val: "Class 6", text: "Class 6" },
+        { val: "Class 7", text: "Class 7" },
+        { val: "Class 8", text: "Class 8" },
+        { val: "Class 9", text: "Class 9" },
+        { val: "Class 10", text: "Class 10" }
+      ];
+      regClassSelect.innerHTML = '';
+      classOptions.forEach((opt, idx) => {
+        const optEl = document.createElement('option');
+        optEl.value = opt.val;
+        optEl.textContent = opt.text;
+        if (idx === prevIndex) optEl.selected = true;
+        regClassSelect.appendChild(optEl);
+      });
     }
   }
 
-  langTeBtn.addEventListener('click', () => setLanguage('te'));
-  langEnBtn.addEventListener('click', () => setLanguage('en'));
+  // Language switcher button listeners
+  if (langTeBtn) langTeBtn.addEventListener('click', () => setLanguage('te'));
+  if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
+  if (authLangTeBtn) authLangTeBtn.addEventListener('click', () => setLanguage('te'));
+  if (authLangEnBtn) authLangEnBtn.addEventListener('click', () => setLanguage('en'));
 
   // Topic Chips Click
   topicChips.forEach(chip => {
@@ -196,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success && data.audio_url) {
         resAudioBox.classList.remove('hidden');
         audioPlayer.src = data.audio_url;
-        audioPlayer.play().catch(() => {});
+        // Do NOT autoplay right after generation; play only when the user explicitly clicks the play button.
       }
     } catch (err) {
       console.warn('TTS auto-playback failed:', err);
@@ -450,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.audio_url) {
       resAudioBox.classList.remove('hidden');
       audioPlayer.src = data.audio_url;
-      audioPlayer.play().catch(() => {});
+      // Do NOT autoplay right after generation; play only when the user explicitly clicks the play button.
     } else {
       resAudioBox.classList.add('hidden');
     }
@@ -866,6 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Run initial authentication check on page load (Login screen appears first)
+  // Run initial language setup and authentication check on page load
+  setLanguage('te');
   checkInitialAuth();
 });
