@@ -29,9 +29,10 @@ app.add_middleware(
 )
 
 # Static files for UI and generated audio
-static_dir = Path("app/static")
-static_dir.mkdir(parents=True, exist_ok=True)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+STATIC_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Include routers
 app.include_router(tutor_router)
@@ -43,7 +44,7 @@ app.include_router(auth_router)
 @app.get("/")
 async def home():
     """Serves the interactive VidyaMitra browser UI."""
-    index_path = Path("app/static/index.html")
+    index_path = STATIC_DIR / "index.html"
     if index_path.exists():
         return FileResponse(str(index_path))
     return {
